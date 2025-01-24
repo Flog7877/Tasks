@@ -9,8 +9,10 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const todosRoutes = require('./routes/todos');
+const categoriesRoutes = require('./routes/categories');
 
 app.use('/api/todos', todosRoutes);
+app.use('/api/categories', categoriesRoutes);
 
 app.get('/', (req, res) => {
     res.send('Backend läuft!');

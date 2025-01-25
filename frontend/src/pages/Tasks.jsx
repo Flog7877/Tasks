@@ -3,6 +3,7 @@ import EisenhowerMatrix from '../components/EisenhowerMatrix';
 import EisenhowerGraph from '../components/EisenhowerGraph';
 import { todosAPI, categoriesAPI } from '../api';
 import useIsMobile from '../hooks/useIsMobile';
+import '../styles/Tasks.css';
 
 import CreateTask from '../components/CreateTask';
 import TaskDetails from '../components/TaskDetails';
@@ -10,6 +11,9 @@ import TaskDetails from '../components/TaskDetails';
 const Tasks = () => {
     const isMobile = useIsMobile();
     //console.log('Am Handy: ', isMobile)
+
+    const [isCreateTask, setIsCreateTask] = useState(false);
+
     const [todos, setTodos] = useState([]);
     const [filteredTodos, setFilteredTodos] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -93,6 +97,10 @@ const Tasks = () => {
         return false;
     };
 
+    const toggleCreatTask = () => {
+        setIsCreateTask(!isCreateTask);
+    }
+
     const handleCategoryChange = (categoryId, isChecked) => {
         setSelectedCategories((prev) => {
             const updated = new Set(prev);
@@ -169,61 +177,72 @@ const Tasks = () => {
     };
 
     return (
-        <div>
-            <h1>Aufgabenübersicht</h1>
+        <>
             <div>
-                <h2>Kategorien</h2>
-                <button onClick={handleSelectAll}>
-                    {selectedCategories.size === countAllCategories(categories) + 1 ? 'Unselect all' : 'Select all'}
-                </button>
-
-
+                <h1>Aufgabenübersicht</h1>
+                <div
+                    className='CreateTask-button'
+                    onClick={toggleCreatTask}
+                >
+                    Task hinzufügen
+                </div>
                 <div>
-                    <input
-                        type="checkbox"
-                        id="category-none"
-                        checked={selectedCategories.has('none')}
-                        onChange={(e) => {
-                            setSelectedCategories((prev) => {
-                                const updated = new Set(prev);
-                                if (e.target.checked) updated.add('none');
-                                else updated.delete('none');
-                                return updated;
-                            });
-                        }}
-                    />
-                    <label htmlFor="category-none">Ohne Kategorie</label>
-                </div>
-                {renderCategories(categories)}
-            </div>
-            <h2>Status</h2>
-            {['todo', 'inProgress', 'done', 'putOff'].map((status) => (
-                <div key={status}>
-                    <input
-                        type="checkbox"
-                        id={`status-${status}`}
-                        checked={statuses.has(status)}
-                        onChange={(e) => handleStatusChange(status, e.target.checked)}
-                    />
-                    <label htmlFor={`status-${status}`}>
-                        {status === 'todo'
-                            ? 'To-Do'
-                            : status === 'inProgress'
-                                ? 'In Bearbeitung'
-                                : status === 'done'
-                                    ? 'Erledigt'
-                                    : 'Aufgeschoben'}
-                    </label>
-                </div>
-            ))}
+                    <h2>Kategorien</h2>
+                    <button onClick={handleSelectAll}>
+                        {selectedCategories.size === countAllCategories(categories) + 1 ? 'Unselect all' : 'Select all'}
+                    </button>
 
-            <EisenhowerMatrix tasks={filteredTodos} />
-            <EisenhowerGraph tasks={filteredTodos} />
-            <div>
-                <h1>TaskDetails-Test (id={testId}):</h1>
-                <TaskDetails id={testId} view={view} />
+
+                    <div>
+                        <input
+                            type="checkbox"
+                            id="category-none"
+                            checked={selectedCategories.has('none')}
+                            onChange={(e) => {
+                                setSelectedCategories((prev) => {
+                                    const updated = new Set(prev);
+                                    if (e.target.checked) updated.add('none');
+                                    else updated.delete('none');
+                                    return updated;
+                                });
+                            }}
+                        />
+                        <label htmlFor="category-none">Ohne Kategorie</label>
+                    </div>
+                    {renderCategories(categories)}
+                </div>
+                <h2>Status</h2>
+                {['todo', 'inProgress', 'done', 'putOff'].map((status) => (
+                    <div key={status}>
+                        <input
+                            type="checkbox"
+                            id={`status-${status}`}
+                            checked={statuses.has(status)}
+                            onChange={(e) => handleStatusChange(status, e.target.checked)}
+                        />
+                        <label htmlFor={`status-${status}`}>
+                            {status === 'todo'
+                                ? 'To-Do'
+                                : status === 'inProgress'
+                                    ? 'In Bearbeitung'
+                                    : status === 'done'
+                                        ? 'Erledigt'
+                                        : 'Aufgeschoben'}
+                        </label>
+                    </div>
+                ))}
+
+                <EisenhowerMatrix tasks={filteredTodos} />
+                <EisenhowerGraph tasks={filteredTodos} />
+                <div>
+                    <h1>TaskDetails-Test (id={testId}):</h1>
+                    <TaskDetails id={testId} view={view} />
+                </div>
             </div>
-        </div>
+            {isCreateTask && (
+                <CreateTask toggle={toggleCreatTask} />
+            )}
+        </>
     );
 };
 

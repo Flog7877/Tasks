@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const timestamp = require('./utils/timestamp');
 require('dotenv').config();
 
 const app = express();
@@ -20,5 +21,5 @@ app.get('/', (req, res) => {
 
 const PORT = 3002;
 app.listen(PORT, () => {
-    console.log(`Server läuft! -> http://localhost:${PORT}`);
+    console.log(`[${timestamp()}] Start/ Reload. Server lausch auf Port ${PORT}`);
 });

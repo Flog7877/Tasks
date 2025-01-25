@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import EisenhowerMatrix from '../components/EisenhowerMatrix';
 import EisenhowerGraph from '../components/EisenhowerGraph';
+import SimpleToggle from '../components/SimpleToggle';
 import { todosAPI, categoriesAPI } from '../api';
 import useIsMobile from '../hooks/useIsMobile';
 import '../styles/Tasks.css';
@@ -176,6 +177,12 @@ const Tasks = () => {
         return count;
     };
 
+    const [toggleState, setToggleState] = useState(false);
+
+    const handleToggle = () => {
+        setToggleState(!toggleState);
+    }
+
     return (
         <>
             <div>
@@ -185,6 +192,9 @@ const Tasks = () => {
                     onClick={toggleCreatTask}
                 >
                     Task hinzufügen
+                </div>
+                <div>
+                        Test für den Toggle: <SimpleToggle initial={toggleState} handler={handleToggle} />
                 </div>
                 <div>
                     <h2>Kategorien</h2>

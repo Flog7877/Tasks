@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react';
 import EisenhowerMatrix from '../components/EisenhowerMatrix';
 import EisenhowerGraph from '../components/EisenhowerGraph';
 import { todosAPI, categoriesAPI } from '../api';
+import useIsMobile from '../hooks/useIsMobile';
+
+import CreateTask from '../components/CreateTask';
 import TaskDetails from '../components/TaskDetails';
 
 const Tasks = () => {
+    const isMobile = useIsMobile();
+    //console.log('Am Handy: ', isMobile)
     const [todos, setTodos] = useState([]);
     const [filteredTodos, setFilteredTodos] = useState([]);
     const [categories, setCategories] = useState([]);

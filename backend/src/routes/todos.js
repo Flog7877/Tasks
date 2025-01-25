@@ -24,4 +24,16 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const [todo] = await db.query('SELECT * FROM todos WHERE id = ?', [req.params.id]);
+        if (todo.length === 0) {
+            return res.status(404).json({ error: 'Task not found' });
+        }
+        res.json(todo[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;

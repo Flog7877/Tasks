@@ -9,8 +9,20 @@ const api = axios.create({
 
 export const todosAPI = {
     getAll: async () => {
-        const response = await api.get('/todos');
-        return response.data;
+        try {
+            const response = await api.get('/todos');
+            return response.data;
+        } catch (err1) {
+            console.log('Fehler beim Abrufen aller Todos: ', err1)
+        }
+    },
+    getById: async (id) => {
+        try {
+            const response = await api.get(`/todos/${id}`);
+            return response.data;
+        } catch (err2) {
+            console.log('Fehler beim Abrufen des Tasks: ', err2);
+        }
     },
     create: async (todo) => {
         const response = await api.post('/todos', todo);
@@ -25,6 +37,10 @@ export const todosAPI = {
 export const categoriesAPI = {
     getAll: async () => {
         const response = await api.get('/categories');
+        return response.data;
+    },
+    getRawCategories: async () => {
+        const response = await api.get('/categories/raw');
         return response.data;
     },
     create: async (category) => {

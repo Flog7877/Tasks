@@ -7,7 +7,6 @@ const EisenhowerMatrix = ({ tasks }) => {
             <p>
                 Hier kommt dann die Matrix.
             </p>
-            {/*<EisenhowerGraph tasks={tasks} />*/}
         </div>
     );
 };

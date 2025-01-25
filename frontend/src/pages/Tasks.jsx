@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import EisenhowerMatrix from '../components/EisenhowerMatrix';
 import EisenhowerGraph from '../components/EisenhowerGraph';
 import { todosAPI, categoriesAPI } from '../api';
+import TaskDetails from '../components/TaskDetails';
 
 const Tasks = () => {
     const [todos, setTodos] = useState([]);
@@ -130,6 +131,9 @@ const Tasks = () => {
         });
     };
 
+    const view = ['id', 'title', 'w_score', 'd_score', 'p_score', 'category', 'hasDeadline', 'deadl_datetime', 'created_at', 'notify', 'status', 'done_at'];
+    const testId = 4;
+
     const renderCategories = (categories) => {
         return categories.map((category) => (
             <div key={category.id} style={{ marginLeft: `${category.parent_id ? 20 : 0}px` }}>
@@ -187,6 +191,7 @@ const Tasks = () => {
                 </div>
                 {renderCategories(categories)}
             </div>
+            <h2>Status</h2>
             {['todo', 'inProgress', 'done', 'putOff'].map((status) => (
                 <div key={status}>
                     <input
@@ -209,6 +214,10 @@ const Tasks = () => {
 
             <EisenhowerMatrix tasks={filteredTodos} />
             <EisenhowerGraph tasks={filteredTodos} />
+            <div>
+                <h1>TaskDetails-Test (id={testId}):</h1>
+                <TaskDetails id={testId} view={view} />
+            </div>
         </div>
     );
 };

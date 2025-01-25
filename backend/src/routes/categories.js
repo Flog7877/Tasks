@@ -22,5 +22,15 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/raw', async (req, res) => {
+    try {
+        const [categories] = await db.query('SELECT * FROM categories');
+
+        res.json(categories);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Fehler beim Abrufen der Kategorien.' });
+    }
+});
 
 module.exports = router;

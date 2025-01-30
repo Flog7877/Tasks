@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { todosAPI, categoriesAPI } from '../api';
-import '../styles/components/CreateTask.css'
+//import '../styles/components/CreateTask.css'
+
+import Popup from './Popup/Popup';
+import PopupInputfield from './Popup/PopupInputfield';
 
 import SimpleToggle from './SimpleToggle';
 import MuiDateTimePicker from './DateTimePicker';
+import PopupTextArea from './Popup/PopupTextArea';
 
 const CreateTask = ({ toggle }) => {
 
     const handleCreateTask = () => {
-        console.log('Submit wurde gedrückt.')
+        return;
     }
 
     const [toggleState, setToggleState] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
+
+    const [taskTitle, setTaskTitle] = useState('');
+    const [taskDetails, setTaskDetails] = useState('')
 
     const handleToggle = () => {
         setToggleState(!toggleState);
@@ -26,7 +33,7 @@ const CreateTask = ({ toggle }) => {
 
     return (
         <>
-            <div className="CreateTask-popup-overlay" onClick={toggle}>
+            {/*<div className="CreateTask-popup-overlay" onClick={toggle}>
                 <div
                     className="CreataTask-popup"
                     onClick={(e) => e.stopPropagation()}
@@ -63,7 +70,7 @@ const CreateTask = ({ toggle }) => {
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
                                     />
-                                </div>*/}
+                                </div>*}
                                 <button type="submit" className="CreateTask-submit">
                                     Hinzufügen
                                 </button>
@@ -72,7 +79,46 @@ const CreateTask = ({ toggle }) => {
                     </div>
 
                 </div>
-            </div>
+            </div>*/}
+            <Popup
+                toggle={toggle}
+                handler={handleCreateTask}
+                title={'Aufgabe hinzufügen'}
+                buttonTitle={'Hinzufügen'}
+                children={
+                    <>
+                        <PopupInputfield
+                            type={'text'}
+                            placeholder={'Titel'}
+                            value={taskTitle}
+                            onChange={(e) => setTaskTitle(e.target.value)}
+                        />
+                        <PopupTextArea 
+                        rows={1}
+                        placeholder={'Details...'}
+                        value={taskDetails}
+                        onChange={(e) => setTaskDetails(e.target.value)}
+                        />
+                        <p>
+                            Das ist ein Test
+                        </p>
+                        <p>
+                            Das ist ein Toggle: <SimpleToggle initial={toggleState} handler={handleToggle} />
+                        </p>
+                        {toggleState && (<div>
+                            <MuiDateTimePicker
+                                label="Deadline"
+                                value={selectedDate}
+                                onChange={(newValue) => handleDatePicker(newValue)}
+                            />
+                        </div>)}
+                        <p>
+                            Test
+                        </p>
+
+                    </>
+                }
+            />
         </>
     );
 };

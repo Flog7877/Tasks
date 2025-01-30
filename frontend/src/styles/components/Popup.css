@@ -1,6 +1,6 @@
 /* Generelles Popup-Overlay  */
 
-.CreateTask-popup-overlay {
+.Popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -14,19 +14,19 @@
     z-index: 999;
 }
 
-.CreataTask-popup {
+.General-popup {
     width: fit-content;
     height: fit-content;
 }
 
-.CreateTask-popup p {
+.General-popup > p {
     margin-bottom: 10px;
     font-size: 1rem;
 }
 
 /* Styling der Form */
 
-.CreateTask-container {
+.Popup-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -34,11 +34,11 @@
     /*min-height: calc(100vh); /Sollte ich einen Header hinzufügen, die Pixelzahl von den 100vh abziehen */
 }
 
-.CreateTask-wrapper {
+.Popup-wrapper {
     width: fit-content;
 }
 
-.CreateTask-form {
+.Popup-form {
     background-color: #363636;
     display: block;
     padding: 1rem;
@@ -46,42 +46,63 @@
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-.CreateTask-form-title {
+p.Popup-form-title{
     font-size: 200%;
     line-height: 1.75rem;
     font-weight: 600;
     text-align: center;
     color: #fff;
+    min-width: 300px;
 }
 
-.CreateTask-input-container {
+.Popup-input-container {
     position: relative;
 }
 
-.CreateTask-input-container input {
+.Popup-input-container input {
     outline: none;
     border: 1px solid #bdbdbd;
     margin: 8px 0;
+    width: calc(100% - 35px);
+    height: fit-content;
+    white-space: collapse !important;
+    
 }
 
-.CreateTask-form button {
+.Popup-form button {
     outline: none;
     border: 1px solid #363636;
     margin: 8px 0;
 }
 
-.CreateTask-input-container input {
+.Popup-input-container input {
     background-color: #363636;
-    padding: 1rem;
-    padding-right: 3rem;
+    padding: 16.5px;
     font-size: 0.875rem;
     line-height: 1.25rem;
-    width: 225px;
     border-radius: 0.5rem;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.CreateTask-submit {
+.Popup-input-container textarea {
+    outline: none;
+    border: 1px solid #bdbdbd;
+    margin: 8px 0;
+    width: calc(100% - 35px);
+    height: fit-content;
+    white-space: collapse !important;
+}
+
+.Popup-input-container textarea {
+    background-color: #363636;
+    padding: 16.5px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.Popup-submit {
     display: block;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
@@ -97,13 +118,13 @@
     text-transform: uppercase;
 }
 
-.CreateTask-submit:hover {
+.Popup-submit:hover {
     background-color: #9A66DB;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     cursor: pointer;
 }
 
-.CreateTask-submit:active {
+.Popup-submit:active {
     background-color: #7E4FB0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transform: scale(0.98);

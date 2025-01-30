@@ -88,7 +88,6 @@ const CreateTask = ({ toggle }) => {
             const categoriesData = await categoriesAPI.getRawCategories();
             setRawCategories(categoriesData);
             const flatCategories = buildHierarchyAndFlatten(categoriesData);
-            console.log('flattened categories: ', flatCategories);
             setCategories(flatCategories);
         };
 
@@ -145,7 +144,6 @@ const CreateTask = ({ toggle }) => {
 
     const handleUnselectCategory = (catObj) => {
         const newArray = selectedCategoryArray.filter(item => item !== catObj)
-        console.log('Die zu entfernende Kategorie: ', catObj);
         setSelectedCategoryArray(newArray);
     }
 
@@ -239,7 +237,7 @@ const CreateTask = ({ toggle }) => {
                                         </li>
                                     ))
                                 ) : (
-                                    <li>Keine Kategorie ausgewählt</li>
+                                    <span></span>
                                 )}
                             </ul>
                         </div>

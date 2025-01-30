@@ -5,8 +5,8 @@ import '../styles/components/SimpleToggle.css'
 const SimpleToggle = ({ initial, handler }) => {
 
     return (
-        <div className='toggler-wrapper'>
-            <div className="toggler">
+        <span className='toggler-wrapper'>
+            <span className="toggler">
                 <input
                     id="toggler-notifications"
                     name="notification-toggle"
@@ -23,8 +23,8 @@ const SimpleToggle = ({ initial, handler }) => {
                         <line className="path line" x1="95.8" y1="34.4" x2="34.4" y2="95.8"></line>
                     </svg>
                 </label>
-            </div>
-        </div>
+            </span>
+        </span>
     );
 };
 

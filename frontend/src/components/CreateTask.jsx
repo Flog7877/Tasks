@@ -2,10 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { todosAPI, categoriesAPI } from '../api';
 import '../styles/components/CreateTask.css'
 
+import SimpleToggle from './SimpleToggle';
+import MuiDateTimePicker from './DateTimePicker';
+
 const CreateTask = ({ toggle }) => {
 
     const handleCreateTask = () => {
         console.log('Submit wurde gedrückt.')
+    }
+
+    const [toggleState, setToggleState] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
+
+    const handleToggle = () => {
+        setToggleState(!toggleState);
+    }
+
+    const handleDatePicker = (e) => {
+        setSelectedDate(e);
+        console.log(selectedDate);
+        console.log(new Date(selectedDate.$d))
     }
 
     return (
@@ -20,8 +36,15 @@ const CreateTask = ({ toggle }) => {
                             <form className="CreateTask-form" onSubmit={handleCreateTask} >
                                 <p className="CreateTask-form-title">Aufgabe hinzufügen</p>
                                 <p>
-                                    Das ist ein Test
+                                    Das ist ein Toggle: <SimpleToggle initial={toggleState} handler={handleToggle} />
                                 </p>
+                                {toggleState && (<div>
+                                    <MuiDateTimePicker
+                                        label="Deadline"
+                                        value={selectedDate}
+                                        onChange={(newValue) => handleDatePicker(newValue)}
+                                    />
+                                </div>)}
                                 {/*<div className="-input-container">
                                     <input
                                         type="text"

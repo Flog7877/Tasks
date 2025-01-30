@@ -1,6 +1,7 @@
 .toggler-wrapper {
     display: inline-block;
-    width: 30px;
+    vertical-align: sub;
+    width: fit-content;
 }
 
 .toggler {

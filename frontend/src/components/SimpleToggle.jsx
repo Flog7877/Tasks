@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { todosAPI, categoriesAPI } from '../api';
+import React from 'react';
 import '../styles/components/SimpleToggle.css'
 
-const SimpleToggle = ({ initial, handler }) => {
+const SimpleToggle = ({ initial, handler, toggleId }) => {
 
     return (
         <span className='toggler-wrapper'>
             <span className="toggler">
                 <input
-                    id="toggler-notifications"
+                    id={`toggler-id-${toggleId}`}
                     name="notification-toggle"
                     type="checkbox"
                     checked={initial}
                     onChange={handler}
                 />
-                <label htmlFor="toggler-notifications">
+                <label htmlFor={`toggler-id-${toggleId}`}>
                     <svg className="toggler-on" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
                         <polyline className="path check" points="100.2,40.2 51.5,88.8 29.8,67.5"></polyline>
                     </svg>

@@ -18,11 +18,11 @@ const PopupTextArea = ({ placeholder, value, onChange }) => {
         <>
             <div className="Popup-input-container">
                 <textarea
+                    rows={1}
                     ref={textAreaRef}
                     placeholder={placeholder}
                     value={value}
                     onChange={onChange}
-                    required
                     style={{ overflow: "hidden", resize: "none" }}
                 />
                 <span>

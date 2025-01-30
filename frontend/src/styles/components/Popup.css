@@ -19,7 +19,7 @@
     height: fit-content;
 }
 
-.General-popup > p {
+.General-popup>p {
     margin-bottom: 10px;
     font-size: 1rem;
 }
@@ -46,7 +46,7 @@
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-p.Popup-form-title{
+p.Popup-form-title {
     font-size: 200%;
     line-height: 1.75rem;
     font-weight: 600;
@@ -66,7 +66,49 @@ p.Popup-form-title{
     width: calc(100% - 35px);
     height: fit-content;
     white-space: collapse !important;
-    
+    background-color: #363636;
+    padding: 16.5px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Fieldset */
+
+.Popup-fieldset-wrapper {
+    position: relative;
+}
+
+.Popup-fieldset-legend {
+    font-size: 14px;
+}
+
+fieldset.Popup-fieldset-container {
+    padding: 16.5px;
+    padding-top: 4px;
+}
+
+.Popup-fieldset-wrapper fieldset {
+    border: 1px solid #bdbdbd;
+    margin: 8px 0;
+    width: calc(100% - 35px);
+    height: fit-content;
+    background-color: #363636;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.Popup-fieldset-container input {
+    border: none;
+    outline: none;
+    background-color: #363636;
+    width: 100%;
+    height: fit-content;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    border-radius: 0.5rem;
+    padding: 0;
 }
 
 .Popup-form button {
@@ -75,31 +117,74 @@ p.Popup-form-title{
     margin: 8px 0;
 }
 
-.Popup-input-container input {
-    background-color: #363636;
-    padding: 16.5px;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
 .Popup-input-container textarea {
     outline: none;
     border: 1px solid #bdbdbd;
     margin: 8px 0;
-    width: calc(100% - 35px);
-    height: fit-content;
-    white-space: collapse !important;
-}
-
-.Popup-input-container textarea {
+    width: calc(100%) !important;
     background-color: #363636;
     padding: 16.5px;
     font-size: 0.875rem;
     line-height: 1.25rem;
     border-radius: 0.5rem;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
+
+.Popup-del-wrapper,
+.Popup-del-container {
+    position: relative;
+}
+
+.Popup-del-container button {
+    position: absolute;
+    top: 24px;
+    margin: 0;
+    right: 8.25px;
+    border: none;
+    outline: none;
+}
+
+.Popup-del-container textarea {
+    outline: none;
+    width: calc(100%) !important;
+    background-color: #363636;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+}
+
+.Popup-del-cancel {
+    background-color: transparent;
+    padding: 0;
+}
+
+fieldset.Popup-del-fieldset-container {
+    padding: 16.5px;
+    padding-top: 8px;
+    padding-bottom: 12.5px;
+    border: 1px solid #bdbdbd;
+    margin: 8px 0;
+    width: calc(100% - 35px);
+    height: fit-content;
+    background-color: #363636;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.Popup-del-fieldset-container textarea {
+    border: none;
+    outline: none;
+    background-color: #363636;
+    width: 100%;
+    height: fit-content;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    border-radius: 0.5rem;
+    padding: 0;
+    padding-right: 20px;
+    box-sizing: border-box !important;
 }
 
 .Popup-submit {

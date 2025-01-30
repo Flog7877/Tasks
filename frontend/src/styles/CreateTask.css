@@ -1,0 +1,21 @@
+.CreateTask-category-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.CreateTask-category-list li {
+    width: fit-content;
+    padding: 2px 4px;
+    margin: 7px 0px;
+    border-radius: 5px;
+}
+
+.CreateTask-UnselectCategory,
+.CreateTask-UnselectCategory button {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    outline: none;
+    background-color: transparent;
+    vertical-align: -1.5px;
+}

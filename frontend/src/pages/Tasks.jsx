@@ -16,7 +16,7 @@ import TaskDetails from '../components/TaskDetails';
 const Tasks = () => {
     const isMobile = useIsMobile();
     //console.log('Am Handy: ', isMobile)
-
+    const [modalOpen, setModalOpen] = useState(false);
     const [isCreateTask, setIsCreateTask] = useState(false);
 
     const [todos, setTodos] = useState([]);
@@ -104,6 +104,7 @@ const Tasks = () => {
 
     const toggleCreatTask = () => {
         setIsCreateTask(!isCreateTask);
+        setModalOpen(!modalOpen);
     }
 
     const handleCategoryChange = (categoryId, isChecked) => {
@@ -183,8 +184,8 @@ const Tasks = () => {
 
     return (
         <>
-            <div>
-                <h1>Aufgabenübersicht</h1>
+            <div className={modalOpen? 'modal-background' : ''}>
+                <h1>Tasks</h1>
                 <div
                     className='CreateTask-button'
                     onClick={toggleCreatTask}
@@ -238,7 +239,9 @@ const Tasks = () => {
                 ))}
 
                 <EisenhowerMatrix tasks={filteredTodos} />
-                <EisenhowerGraph tasks={filteredTodos} />
+                {!isMobile && (
+                    <EisenhowerGraph tasks={filteredTodos} />
+                )}
                 <div>
                     <h1>TaskDetails-Test (id={testId}):</h1>
                     <TaskDetails id={testId} view={view} />

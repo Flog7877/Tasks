@@ -1,11 +1,17 @@
 /* Generelles Popup-Overlay  */
 
+.modal-background {
+    max-height: 100vh;
+    overflow-y: hidden;
+}
+
 .Popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    overflow: hidden !important;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(2px);
     display: flex;
@@ -24,7 +30,7 @@
     font-size: 1rem;
 }
 
-/* Styling der Form */
+/* //////// Form-Styling //////// */
 
 .Popup-container {
     display: flex;
@@ -36,6 +42,24 @@
 
 .Popup-wrapper {
     width: fit-content;
+}
+
+.Popup-content {
+    max-height: calc(85vh - 186px);
+    overflow-y: auto;
+    position: relative;
+}
+
+.Popup-content {
+    scrollbar-width: none;
+}
+
+.Popup-content.top-border {
+    border-top: 1px solid #bdbdbd;
+}
+
+.Popup-content.bottom-border {
+    border-bottom: 1px solid #bdbdbd;
 }
 
 .Popup-form {
@@ -52,7 +76,7 @@ p.Popup-form-title {
     font-weight: 600;
     text-align: center;
     color: #fff;
-    min-width: 300px;
+    /*min-width: 300px; /* vorher */
 }
 
 .Popup-input-container {

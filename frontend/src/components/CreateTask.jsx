@@ -10,7 +10,13 @@ import MuiDateTimePicker from './DateTimePicker';
 import PopupTextArea from './Popup/PopupTextArea';
 import PopupNumberInput from './Popup/PopupNumberInput';
 import PopupDelField from './Popup/PopupDelField';
-import CancleIcon from '../icons/CancelIcon';
+
+import {
+    CancleIcon,
+    PlusIcon,
+    UpArrowIcon,
+    DownArrowIcon
+} from '../icons/icons';
 
 function getContrastingColor(hexColor) {
     let color = hexColor.replace('#', '');
@@ -30,24 +36,24 @@ const CreateTask = ({ toggle }) => {
 
     const [hasDeadline, setHasDeadline] = useState(false);
     const [hasNotification, setHasNotification] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(null);
+
+    const [dateMode, setDateMode] = useState('none');
+    const [selectedDateTime, setSelectedDateTime] = useState(null);
+    const [todoRecurrence, setTodoRecurrence] = useState('none');
 
     const [importanceScore, setImportanceScore] = useState('');
-    const [urgencyScore, setUrgencyScore] = useState('')
+    const [urgencyScore, setUrgencyScore] = useState('');
+
+    const [todoStatus, setTodoStatus] = useState('todo');
 
     const [taskTitle, setTaskTitle] = useState('');
     const [taskDetails, setTaskDetails] = useState('');
 
+
+    const [selectedCategoryArray, setSelectedCategoryArray] = useState([]);
+
     const [categories, setCategories] = useState([]);
     const [rawCategories, setRawCategories] = useState([]);
-
-
-    // Temp 
-
-    const [showStep, setShowStep] = useState(false);
-    const [step, setStep] = useState('');
-
-    //
 
     function buildHierarchyAndFlatten(catArray) {
         const map = {};
@@ -98,19 +104,14 @@ const CreateTask = ({ toggle }) => {
         setHasDeadline(!hasDeadline);
     }
 
-    const handleDeadlineSelect = (e) => {
-        setSelectedDate(e);
+    const handleDateTimeSelect = (e) => {
+        setSelectedDateTime(e);
         //console.log(new Date(selectedDate.$d))
     }
 
     const toggleNotification = (e) => {
         setHasNotification(!hasNotification);
     }
-
-    const handleAddStep = () => {
-        if (showStep === false) setShowStep(true);
-    }
-
     const handleChangeImportanceScore = (e) => {
         if (e > 10) setImportanceScore(10);
         else if (e <= 0) setImportanceScore(1);
@@ -128,14 +129,6 @@ const CreateTask = ({ toggle }) => {
         console.log('Hinzufügen gedrückt')
     }
 
-    // Temp
-
-    const toggleStep = () => {
-        setStep('');
-        setShowStep(!showStep);
-    }
-
-    const [selectedCategoryArray, setSelectedCategoryArray] = useState([]);
 
     const handleSelectCategory = (catID) => {
         const catObj = categories.find(item => item.id === parseInt(catID));
@@ -145,6 +138,72 @@ const CreateTask = ({ toggle }) => {
     const handleUnselectCategory = (catObj) => {
         const newArray = selectedCategoryArray.filter(item => item !== catObj)
         setSelectedCategoryArray(newArray);
+    }
+
+    const [currentStepText, setCurrentStepText] = useState('');
+    const [stepsList, setStepsList] = useState([]);
+
+    const handleAddStep = (e) => {
+        e.preventDefault();
+        const textToSave = currentStepText;
+        const currentStepsLength = stepsList.length;
+        const stepNumber = currentStepsLength + 1;
+        const stepListEntry = {
+            "id": `${stepNumber}`,
+            "content": `${textToSave}`,
+            "stepStatus": "todo",
+        };
+        setStepsList(prevSteps => [...prevSteps, stepListEntry]);
+        setCurrentStepText('');
+    }
+    const handleChangeOrder = (step, direction) => {
+        const movedStepId = parseInt(step.id);
+        const editStepsList = stepsList;
+
+        let newMovedId, affectedStepId, newAffectedId;
+
+        switch (direction) {
+            case 'up':
+                if (movedStepId === stepsList.length) return;
+                affectedStepId = movedStepId + 1;
+                newMovedId = movedStepId + 1;
+                newAffectedId = affectedStepId - 1
+                break;
+            case 'down':
+                if (movedStepId === 1) return;
+                affectedStepId = movedStepId - 1;
+                newMovedId = movedStepId - 1;
+                newAffectedId = affectedStepId + 1
+                break;
+            default:
+                console.error('Fehler beim Verschieben eines Schritts: Ungültige Richtung!')
+        }
+
+        for (let stepListCurr of editStepsList) {
+            const currId = parseInt(stepListCurr.id);
+            if (currId === affectedStepId) stepListCurr.id = newAffectedId
+            else if (currId === movedStepId) stepListCurr.id = newMovedId
+        }
+
+        const sortedSteps = [...stepsList].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+
+        setStepsList(sortedSteps);
+    }
+
+    const handleDeleteStep = (step) => {
+        const deletedStep = step;
+        const deletedNumber = deletedStep.id;
+        const newStepArray = stepsList.filter(item => item !== deletedStep);
+        for (let otherStep of newStepArray) {
+            otherStep.id = otherStep.id > deletedNumber ? otherStep.id - 1 : otherStep.id;
+        }
+        setStepsList(newStepArray);
+    }
+
+    const handleChangeRecurrence = (e) => {
+        e.preventDefault
+        const mode = e.target.value;
+        setTodoRecurrence(mode);
     }
 
     return (
@@ -168,25 +227,79 @@ const CreateTask = ({ toggle }) => {
                             value={taskDetails}
                             onChange={(e) => setTaskDetails(e.target.value)}
                         />
-                        <div>
-                            <button
-                                className='ct-add-button'
-                                onClick={handleAddStep}
-                                type='button'
-                            >
-                                + Schritt hinzufügen
-                            </button>
+                        <div className='createTask-steps-container'>
+                            <ul className='CreateTask-steps-list'>
+                                {stepsList.length > 0 ? stepsList.map(step => (
+                                    <li
+                                        className='singleStep-entry'
+                                        key={step.id}
+                                    >
+                                        <span className='singleStep-title'>Schritt {step.id}</span>
+                                        <div className='steps-buttonWrapper'>
+                                            <button
+                                                id={`sigleStep-deleteButton-id${step.id}`}
+                                                className='singleStep-deleteButton'
+                                                type='button'
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    handleDeleteStep(step);
+                                                }}
+                                            >
+                                                <CancleIcon width="20px" />
+                                            </button>
+                                            <button
+                                                id={`sigleStep-upButton-id${step.id}`}
+                                                className='singleStep-changeOrderButton'
+                                                type='button'
+                                                disabled={parseInt(step.id) === stepsList.length}
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    handleChangeOrder(step, 'up');
+                                                }}
+                                            >
+                                                <DownArrowIcon width="20px" />
+                                            </button>
+                                            <button
+                                                id={`sigleStep-downButton-id${step.id}`}
+                                                className='singleStep-changeOrderButton'
+                                                type='button'
+                                                disabled={parseInt(step.id) === 1}
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    handleChangeOrder(step, 'down');
+                                                }}
+                                            >
+                                                <UpArrowIcon width="20px" />
+                                            </button>
+                                        </div>
+                                        <div className='singleStep-content'>
+                                            {step.content}
+                                        </div>
+                                    </li>
+                                )) : <span></span>}
+                            </ul>
+                            <div className='addSteps-wrapper'>
+                                <fieldset className='addSteps-fieldset'>
+                                    <legend className='addSteps-legend'>Schritt hinzufügen</legend>
+                                    <input
+                                        className='addSteps-input'
+                                        type='text'
+                                        placeholder='...'
+                                        value={currentStepText}
+                                        onChange={(e) => setCurrentStepText(e.target.value)}
+                                    />
+                                    {currentStepText !== '' && (
+                                        <button
+                                            className='addSteps-button'
+                                            type='button'
+                                            onClick={(e) => handleAddStep(e)}
+                                        >
+                                            <PlusIcon width="20px" />
+                                        </button>
+                                    )}
+                                </fieldset>
+                            </div>
                         </div>
-                        {showStep && (<div>
-                            <PopupDelField
-                                legend={'Schritt 1'}
-                                id={3}
-                                placeholder={'Schritt hinzufügen...'}
-                                value={step}
-                                onChange={(e) => setStep(e.target.value)}
-                                onClick={toggleStep}
-                            />
-                        </div>)}
                         <PopupNumberInput
                             legend={'Wichtigkeitsscore'}
                             value={importanceScore}
@@ -241,21 +354,100 @@ const CreateTask = ({ toggle }) => {
                                 )}
                             </ul>
                         </div>
+                        <div className='CreateTask-status-container'>
+                            <strong>Status:</strong>&nbsp;
+                            <div className='status-toggle'>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="todo"
+                                        checked={todoStatus === 'todo'}
+                                        onChange={(e) => setTodoStatus(e.target.value)}
+                                    />
+                                    Todo
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="inProgress"
+                                        checked={todoStatus === 'inProgress'}
+                                        onChange={(e) => setTodoStatus(e.target.value)}
+                                    />
+                                    In Bearbeitung
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="putOff"
+                                        checked={todoStatus === 'putOff'}
+                                        onChange={(e) => setTodoStatus(e.target.value)}
+                                    />
+                                    Aufgeschoben
+                                </label>
+                            </div>
+                        </div>
+                        <div className='CreateTask-dateMode-wrapper'>
+                            <div className='CreateTask-dateMode-container'>
+                                <strong>Datemode:</strong>&nbsp;
+                                <div className='dateMode-toggle'>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            value="none"
+                                            checked={dateMode === 'none'}
+                                            onChange={(e) => {
+                                                setDateMode(e.target.value);
+                                                setSelectedDateTime(null)
+                                            }}
+                                        />
+                                        Aus
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            value="deadline"
+                                            checked={dateMode === 'deadline'}
+                                            onChange={(e) => setDateMode(e.target.value)}
+                                        />
+                                        Deadline
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            value="onDateTime"
+                                            checked={dateMode === 'onDateTime'}
+                                            onChange={(e) => setDateMode(e.target.value)}
+                                        />
+                                        Zeitpunkt
+                                    </label>
+                                </div>
+                            </div>
+                            {dateMode !== 'none' && (
+                                <div className='dateMode-datePicker'>
+                                    <MuiDateTimePicker
+                                        label={dateMode === 'deadline' ? 'Deadline' : 'Startzeitpunkt'}
+                                        value={selectedDateTime}
+                                        onChange={(newValue) => handleDateTimeSelect(newValue)}
+                                    />
+                                    {dateMode === 'onDateTime' && (
+                                        <div className='dateMode-recurrencePicker'>
+                                            <strong>Recurrence?</strong>&nbsp;&nbsp;
+                                            <select
+                                                value={todoRecurrence}
+                                                onChange={(e) => handleChangeRecurrence(e)}
+                                            >
+                                                <option value='none'>Keine</option>
+                                                <option value='daily'>Täglich</option>
+                                                <option value='weekly'>Wöchentlich</option>
+                                                <option value='monthly'>Monatlich</option>
+                                            </select>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                         <p>
-                            Status
-                        </p>
-                        <p>
-                            Fälligkeitsdatum? <SimpleToggle initial={hasDeadline} handler={handleHasDeadline} toggleId={"deadline"} />
-                        </p>
-                        {hasDeadline && (<div>
-                            <MuiDateTimePicker
-                                label="Deadline"
-                                value={selectedDate}
-                                onChange={(newValue) => handleDeadlineSelect(newValue)}
-                            />
-                        </div>)}
-                        <p>
-                            Reminder? <SimpleToggle initial={hasNotification} handler={toggleNotification} toggleId={"reminder"} />
+                            <strong>Benachrichtigungen</strong> <SimpleToggle initial={hasNotification} handler={toggleNotification} toggleId={"reminder"} />
                         </p>
                         {hasNotification && (
                             <div>

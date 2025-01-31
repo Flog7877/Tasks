@@ -1,13 +1,29 @@
 .CreateTask-category-list {
     list-style: none;
     padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    /* Gleichmäßiger horizontaler und vertikaler Abstand */
+    justify-content: flex-start;
+    /* Elemente am Anfang ausrichten */
 }
 
 .CreateTask-category-list li {
-    width: fit-content;
-    padding: 2px 4px;
-    margin: 7px 0px;
+    margin: 0;
+    /* Entferne individuelle Margins */
+    padding: 4px 8px;
+    /* Innenabstand */
     border-radius: 5px;
+    background-color: #f0f0f0;
+    /* Beispielhintergrundfarbe */
+    display: flex;
+    align-items: center;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 .CreateTask-UnselectCategory,
@@ -17,5 +33,36 @@
     border: none !important;
     outline: none;
     background-color: transparent;
-    vertical-align: -1.5px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.CreateTask-dateMode-container,
+.CreateTask-status-container {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin: 10px 0px;
+}
+
+.dateMode-recurrencePicker {
+    margin: 10px 0px;
+}
+
+.dateMode-toggle,
+.status-toggle {
+    display: flex;
+    gap: 1rem;
+}
+
+.dateMode-toggle label,
+.status-toggle label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.dateMode-toggle input,
+.status-toggle input {
+    margin-right: 0.5rem;
 }

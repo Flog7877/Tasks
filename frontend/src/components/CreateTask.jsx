@@ -106,7 +106,7 @@ const CreateTask = ({ toggle }) => {
 
     const handleDateTimeSelect = (e) => {
         setSelectedDateTime(e);
-        //console.log(new Date(selectedDate.$d))
+        console.log(new Date(selectedDateTime))
     }
 
     const toggleNotification = (e) => {

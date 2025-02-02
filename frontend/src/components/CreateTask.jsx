@@ -11,6 +11,8 @@ import PopupTextArea from './Popup/PopupTextArea';
 import PopupNumberInput from './Popup/PopupNumberInput';
 import PopupDelField from './Popup/PopupDelField';
 
+import DateTimeInput from './DateTimeInput';
+
 import {
     CancleIcon,
     PlusIcon,
@@ -204,6 +206,10 @@ const CreateTask = ({ toggle }) => {
         e.preventDefault
         const mode = e.target.value;
         setTodoRecurrence(mode);
+    }
+
+    const handleDateTimeInput = (passedDate) => {
+        console.log('Eingegebenes Datum: ', passedDate);
     }
 
     return (
@@ -460,6 +466,11 @@ const CreateTask = ({ toggle }) => {
                                 </button>
                             </div>
                         )}
+                        <DateTimeInput
+                        dtiTitle="Test-Picker"
+                        enablePast={true}
+                        onValidInput={(e) => handleDateTimeInput(e)}
+                        />
                     </>
                 }
             />

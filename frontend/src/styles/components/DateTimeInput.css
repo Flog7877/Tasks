@@ -1,0 +1,16 @@
+.dti-inputField {
+    border: none;
+    background-color: transparent;
+}
+
+input.dti-inputField {
+    padding: 0;
+    width: 40px;
+    text-align: center;
+}
+
+
+
+.dti-fieldset.isEditing input {
+    color: hsl(0, 100%, 91%);
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { todosAPI, categoriesAPI } from '../api';
 import '../styles/CreateTask.css';
-
+import useIsMobile from '../hooks/useIsMobile';
 import Popup from './Popup/Popup';
 import PopupInputfield from './Popup/PopupInputfield';
 
@@ -46,6 +46,10 @@ function getContrastingColor(hexColor) {
 }
 
 const CreateTask = ({ toggle }) => {
+
+    const isMobile = useIsMobile();
+
+    const PopupWidth = isMobile? '90%' : '448px';
 
     const [hasDeadline, setHasDeadline] = useState(false);
     const [hasNotification, setHasNotification] = useState(false);
@@ -244,7 +248,10 @@ const CreateTask = ({ toggle }) => {
                 handler={handleCreateTask}
                 title={'Aufgabe hinzufügen'}
                 buttonTitle={'Hinzufügen'}
-                children={
+                mode='form'
+                width={PopupWidth}
+                zIndex={888}
+                content={
                     <>
                         <PopupInputfield
                             type={'text'}
@@ -476,22 +483,6 @@ const CreateTask = ({ toggle }) => {
                                         </div>
                                     )}
                                 </div>
-                            )}
-                        </div>
-                        <div className='ct-notification-wrapper'>
-                            <DateTimeInput
-                                title='Benachrichtigung hinzufügen'
-                                width='calc(100% - 37px)'
-                                onChange={(d) => setCurrentNotificationDT(d)}
-                            />
-                            {'' === '' && (
-                                <button
-                                    className='addNotification-button'
-                                    type='button'
-                                    onClick={(e) => handleAddNotification(e)}
-                                >
-                                    <PlusIcon width="20px" />
-                                </button>
                             )}
                         </div>
                     </>

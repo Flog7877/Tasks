@@ -17,7 +17,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    /*z-index: 999;*/
 }
 
 .General-popup {
@@ -44,24 +44,27 @@
     width: fit-content;
 }
 
-.Popup-content {
+.Popup-form-content {
     max-height: calc(85vh - 186px);
     overflow-y: auto;
     position: relative;
 }
 
-.Popup-content {
+.Popup-form-content {
     scrollbar-width: none;
 }
 
-.Popup-content.top-border {
+/*
+.Popup-form-content.top-border {
     border-top: 1px solid #bdbdbd;
 }
 
-.Popup-content.bottom-border {
+.Popup-form-content.bottom-border {
     border-bottom: 1px solid #bdbdbd;
 }
+*/
 
+.Popup-display-content,
 .Popup-form {
     background-color: #363636;
     display: block;
@@ -70,15 +73,19 @@
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+p.Popup-diaplay-title,
 p.Popup-form-title {
+    margin: 8px 0px;
+    margin-bottom: 23px;
     font-size: 200%;
     line-height: 1.75rem;
     font-weight: 600;
     text-align: center;
     color: #fff;
-    /*min-width: 300px; /* vorher */
 }
 
+
+/* --- Komponenten --- */
 .Popup-input-container {
     position: relative;
 }

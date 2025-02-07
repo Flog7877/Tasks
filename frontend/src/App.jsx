@@ -4,8 +4,7 @@ import Dashboard from './pages/Dashboard';
 import Tasks from './pages/Tasks';
 import NotFound from './pages/NotFound';
 
-// TEMPORÄR: 
-import DateTimeInput from './components/DateTimeInput';
+import Test from './pages/Test';
 
 const App = () => {
     return (
@@ -13,8 +12,8 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/tasks" element={<Tasks />} />
+                <Route path="/test" element={<Test />} />
                 <Route path="*" element={<NotFound />} />
-                <Route path="/datetime" element={<DateTimeInput />} /> 
             </Routes>
         </Router>
     );

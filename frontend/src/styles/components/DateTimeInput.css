@@ -3,14 +3,36 @@
     background-color: transparent;
 }
 
-input.dti-inputField {
-    padding: 0;
-    width: 40px;
-    text-align: center;
+fieldset.dti-fieldset {
+    padding: 16.5px;
+    margin: 8px 0px;
+    border: 1px solid #bdbdbd;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+section.dti-section,
+fieldset.dti-fieldset {
+    display: flex;
+    align-items: baseline;
+    justify-content: left;
+    color: #fff;
 }
 
 
+input.dti-inputField {
+    padding: 0;
+    font-size: 1rem;
+}
 
-.dti-fieldset.isEditing input {
-    color: hsl(0, 100%, 91%);
+input.dti-inputField:active,
+input.dti-inputField:focus,
+input.dti-inputField:focus-visible {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+input.dti-inputField::placeholder {
+    color: #ffffff8a;
 }

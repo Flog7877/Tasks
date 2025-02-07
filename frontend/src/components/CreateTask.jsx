@@ -20,6 +20,17 @@ import {
     DownArrowIcon
 } from '../icons/icons';
 
+function isValidDate(date) {
+    if (Object.prototype.toString.call(date) === "[object Date]") {
+        if (isNaN(date.getTime())) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+}
+
 function getContrastingColor(hexColor) {
     let color = hexColor.replace('#', '');
     if (color.length === 3) {
@@ -107,8 +118,8 @@ const CreateTask = ({ toggle }) => {
     }
 
     const handleDateTimeSelect = (e) => {
+        console.log(e);
         setSelectedDateTime(e);
-        console.log(new Date(selectedDateTime))
     }
 
     const toggleNotification = (e) => {
@@ -210,6 +221,20 @@ const CreateTask = ({ toggle }) => {
 
     const handleDateTimeInput = (passedDate) => {
         console.log('Eingegebenes Datum: ', passedDate);
+    }
+
+    // Notifications 
+
+    const [currentNotificationDT, setCurrentNotificationDT] = useState('');
+    const [notificationList, setCurrentNotificationList] = useState([]);
+
+    const handleAddNotification = (e) => {
+        e.preventDefault();
+        if (!isValidDate(currentNotificationDT)) {
+            console.log('Datum ist nicht valide (angeblich)');
+            return;
+        }
+        console.log('Datum ist gültig!');
     }
 
     return (
@@ -430,10 +455,11 @@ const CreateTask = ({ toggle }) => {
                             </div>
                             {dateMode !== 'none' && (
                                 <div className='dateMode-datePicker'>
-                                    <MuiDateTimePicker
-                                        label={dateMode === 'deadline' ? 'Deadline' : 'Startzeitpunkt'}
-                                        value={selectedDateTime}
-                                        onChange={(newValue) => handleDateTimeSelect(newValue)}
+                                    <DateTimeInput
+                                        title={dateMode === 'deadline' ? 'Deadline' : 'Startzeitpunkt'}
+                                        width='calc(100% - 35px)'
+                                        onValidInput={(d) => handleDateTimeInput(d)}
+                                        enablePast={false}
                                     />
                                     {dateMode === 'onDateTime' && (
                                         <div className='dateMode-recurrencePicker'>
@@ -452,25 +478,22 @@ const CreateTask = ({ toggle }) => {
                                 </div>
                             )}
                         </div>
-                        <p>
-                            <strong>Benachrichtigungen</strong> <SimpleToggle initial={hasNotification} handler={toggleNotification} toggleId={"reminder"} />
-                        </p>
-                        {hasNotification && (
-                            <div>
+                        <div className='ct-notification-wrapper'>
+                            <DateTimeInput
+                                title='Benachrichtigung hinzufügen'
+                                width='calc(100% - 37px)'
+                                onChange={(d) => setCurrentNotificationDT(d)}
+                            />
+                            {'' === '' && (
                                 <button
-                                    className='ct-add-button'
-                                    onClick={handleAddStep}
+                                    className='addNotification-button'
                                     type='button'
+                                    onClick={(e) => handleAddNotification(e)}
                                 >
-                                    + Benachrichtigung hinzufügen
+                                    <PlusIcon width="20px" />
                                 </button>
-                            </div>
-                        )}
-                        <DateTimeInput
-                        dtiTitle="Test-Picker"
-                        enablePast={true}
-                        onValidInput={(e) => handleDateTimeInput(e)}
-                        />
+                            )}
+                        </div>
                     </>
                 }
             />

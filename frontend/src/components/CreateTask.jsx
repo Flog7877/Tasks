@@ -10,6 +10,7 @@ import MuiDateTimePicker from './DateTimePicker';
 import PopupTextArea from './Popup/PopupTextArea';
 import PopupNumberInput from './Popup/PopupNumberInput';
 import PopupDelField from './Popup/PopupDelField';
+import NotificationModal from './NotificationModal';
 
 import DateTimeInput from './DateTimeInput';
 
@@ -49,7 +50,7 @@ const CreateTask = ({ toggle }) => {
 
     const isMobile = useIsMobile();
 
-    const PopupWidth = isMobile? '90%' : '448px';
+    const PopupWidth = isMobile ? '90%' : '448px';
 
     const [hasDeadline, setHasDeadline] = useState(false);
     const [hasNotification, setHasNotification] = useState(false);
@@ -117,18 +118,6 @@ const CreateTask = ({ toggle }) => {
         fetchData();
     }, []);
 
-    const handleHasDeadline = () => {
-        setHasDeadline(!hasDeadline);
-    }
-
-    const handleDateTimeSelect = (e) => {
-        console.log(e);
-        setSelectedDateTime(e);
-    }
-
-    const toggleNotification = (e) => {
-        setHasNotification(!hasNotification);
-    }
     const handleChangeImportanceScore = (e) => {
         if (e > 10) setImportanceScore(10);
         else if (e <= 0) setImportanceScore(1);
@@ -145,7 +134,6 @@ const CreateTask = ({ toggle }) => {
         e.preventDefault();
         console.log('Hinzufügen gedrückt')
     }
-
 
     const handleSelectCategory = (catID) => {
         const catObj = categories.find(item => item.id === parseInt(catID));
@@ -229,16 +217,29 @@ const CreateTask = ({ toggle }) => {
 
     // Notifications 
 
-    const [currentNotificationDT, setCurrentNotificationDT] = useState('');
-    const [notificationList, setCurrentNotificationList] = useState([]);
+    const [showNotificationModal, setShowNotificationModal] = useState(false);
+    const [notificationList, setNotificationList] = useState([]);
+
+    const toggleShowNotificationModal = () => {
+        setShowNotificationModal(!showNotificationModal);
+    }
 
     const handleAddNotification = (e) => {
-        e.preventDefault();
-        if (!isValidDate(currentNotificationDT)) {
-            console.log('Datum ist nicht valide (angeblich)');
-            return;
-        }
-        console.log('Datum ist gültig!');
+        const new_notification = e;
+        new_notification.id = notificationList.length;
+        setNotificationList(prevNotifs => [...prevNotifs, new_notification]);
+        setShowNotificationModal(false)
+    }
+
+    const gerDateTime = (dateString) => {
+        const date = new Date(dateString)
+        return `${date.toLocaleDateString()} ${date.getHours()}:${date.getMinutes()}`
+    }
+
+    const handleDeleteNotification = (notification) => {
+        const deletedNotification = notification;
+        const newStepArray = notificationList.filter(item => item !== deletedNotification);
+        setNotificationList(newStepArray);
     }
 
     return (
@@ -485,6 +486,42 @@ const CreateTask = ({ toggle }) => {
                                 </div>
                             )}
                         </div>
+                        <div
+                            className='CreateTask-button'
+                            onClick={toggleShowNotificationModal}
+                        >
+                            Benachrichtigung hinzufügen
+                        </div>
+                        {showNotificationModal && (
+                            <NotificationModal
+                                toggle={toggleShowNotificationModal}
+                                handleCancle={() => toggleShowNotificationModal()}
+                                handleDone={(e) => handleAddNotification(e)}
+                            />
+                        )}
+                        <ul className='ct-notif-list'>
+                            {notificationList.length > 0 ? notificationList.map(notification => (
+                                <li
+                                    className='ct-notif-entry'
+                                    key={notification.id}
+                                >
+                                    Datum: {gerDateTime(notification.date_string)}
+                                    <button
+                                        id={`notification-deleteButton-id${notification.id}`}
+                                        className='ct-notif-deleteButton'
+                                        type='button'
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            handleDeleteNotification(notification);
+                                        }}
+                                    >
+                                        <CancleIcon width="20px" />
+                                    </button><br />
+                                    Recurrence: {notification.recurrence} <br />
+                                    Enddatum: {notification.rec_end_date === null ? '-' : new Date(notification.rec_end_date).toLocaleDateString()}
+                                </li>
+                            )) : <span></span>}
+                        </ul>
                     </>
                 }
             />

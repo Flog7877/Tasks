@@ -1,0 +1,26 @@
+.dti-container.notificationModal.rec fieldset {
+    padding: 4px !important;
+}
+
+.ct-notif-enddate {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ct-notif-rec {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ct-notif-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    margin-top: 8px;
+}
+
+.ct-notif-buttons button {
+    margin-left: 8px;
+}

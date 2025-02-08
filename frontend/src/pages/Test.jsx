@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import DateTimeInput from '../components/DateTimeInput';
 import Popup from '../components/Popup/Popup';
+import '../styles/components/NotificationModal.css';
 
 import {
     CancleIcon,
@@ -88,8 +89,8 @@ function Test() {
                                     onChange={(d) => setCurrentNotificationDatetime(d)}
                                 />
                             </div>
-                            <div className='dateMode-recurrencePicker'>
-                                <strong>Recurrence?</strong>&nbsp;&nbsp;
+                            <div className='ct-notif-rec'>
+                                <strong>Recurrence</strong>&nbsp;&nbsp;
                                 <select
                                     value={recurrence}
                                     onChange={(e) => handleChangeRecurrence(e)}
@@ -99,35 +100,37 @@ function Test() {
                                     <option value='weekly'>Wöchentlich</option>
                                     <option value='monthly'>Monatlich</option>
                                 </select>
-                                {recurrence !== 'none' && (
-                                    <div>
-                                        Enddatum:
-                                        <DateTimeInput
-                                            enablePast={false}
-                                            timeInput={false}
-                                            width='fit-content'
-                                            customClass='notificationModal'
-                                            onChange={(e) => setEndDate(e)}
-                                        />
-                                    </div>
-                                )}
                             </div>
-                            <button
-                                id='ct-add-notification'
-                                className='addNotification-button'
-                                type='button'
-                                onClick={(e) => handleCancleNotification(e)}
-                            >
-                                Abbrechen
-                            </button>
-                            <button
-                                id='ct-cancle-notification'
-                                className='cancleNotification-button'
-                                type='button'
-                                onClick={(e) => handleAddNotification(e)}
-                            >
-                                Fertig
-                            </button>
+                            {recurrence !== 'none' && (
+                                <div className='ct-notif-enddate'>
+                                    <strong>Enddatum</strong>&nbsp;&nbsp;
+                                    <DateTimeInput
+                                        enablePast={false}
+                                        timeInput={false}
+                                        width='fit-content'
+                                        customClass='notificationModal rec'
+                                        onChange={(e) => setEndDate(e)}
+                                    />
+                                </div>
+                            )}
+                            <div className='ct-notif-buttons'>
+                                <button
+                                    id='ct-add-notification'
+                                    className='addNotification-button'
+                                    type='button'
+                                    onClick={(e) => handleCancleNotification(e)}
+                                >
+                                    Abbrechen
+                                </button>
+                                <button
+                                    id='ct-cancle-notification'
+                                    className='cancleNotification-button'
+                                    type='button'
+                                    onClick={(e) => handleAddNotification(e)}
+                                >
+                                    Fertig
+                                </button>
+                            </div>
                         </>
                     }
                 />

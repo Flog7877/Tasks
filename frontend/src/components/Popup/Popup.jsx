@@ -18,35 +18,6 @@ import useIsMobile from '../../hooks/useIsMobile';
  */
 const Popup = ({ toggle, mode, width, maxHeight, zIndex, handler, title, buttonTitle, content }) => {
 
-    /*const contentRef = useRef(null);
-    const [isScrollableTop, setIsScrollableTop] = useState(false);
-    const [isScrollableBottom, setIsScrollableBottom] = useState(false);
-
-
-
-    useEffect(() => {
-        const el = contentRef.current;
-
-        const checkScroll = () => {
-            if (el) {
-                setIsScrollableTop(el.scrollTop > 0);
-                setIsScrollableBottom(el.scrollTop + el.clientHeight < el.scrollHeight);
-            }
-        };
-
-        checkScroll();
-
-        el.addEventListener('scroll', checkScroll);
-        window.addEventListener('resize', checkScroll);
-
-        return () => {
-            if (el) {
-                el.removeEventListener('scroll', checkScroll);
-            }
-            window.removeEventListener('resize', checkScroll);
-        };
-    }, [content]);*/
-
     return (
         <>
             <div 

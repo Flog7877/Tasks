@@ -35,7 +35,6 @@ function validateValue(str, l, m) {
     if (isNaN(str)) return
     else if (str.length > l || str.includes('.')) return
     else if (parseInt(str) > m) finalValueStr = `${m}`
-    else if (str === '00') finalValueStr = `01`
     else finalValueStr = str;
     return finalValueStr;
 }
@@ -228,8 +227,9 @@ const DateTimeInput = ({
     const handleDayInput = (e) => {
         e.preventDefault();
         const enteredDayString = e.target.value;
-        const finalDays = validateValue(enteredDayString, 2, 31);
+        let finalDays = validateValue(enteredDayString, 2, 31);
         if (finalDays === undefined) return
+        else if (finalDays === '00') finalDays = `01`
         setDayInput(finalDays)
         if (finalDays.length === 2) monthInputRef.current.focus();
     }
@@ -237,8 +237,9 @@ const DateTimeInput = ({
     const handleMonthInput = (e) => {
         e.preventDefault();
         const enteredMonthString = e.target.value;
-        const finalMonths = validateValue(enteredMonthString, 2, 12);
+        let finalMonths = validateValue(enteredMonthString, 2, 12);
         if (finalMonths === undefined) return
+        else if (finalMonths === '00') finalMonths = `01`
         setMonthInput(finalMonths);
         if (finalMonths.length === 2) yearInputRef.current.focus();
     }

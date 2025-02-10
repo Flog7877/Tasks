@@ -4,19 +4,15 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    /* Gleichmäßiger horizontaler und vertikaler Abstand */
     justify-content: flex-start;
-    /* Elemente am Anfang ausrichten */
+    margin: 8px 0px;
 }
 
 .CreateTask-category-list li {
     margin: 0;
-    /* Entferne individuelle Margins */
     padding: 4px 8px;
-    /* Innenabstand */
     border-radius: 5px;
     background-color: #f0f0f0;
-    /* Beispielhintergrundfarbe */
     display: flex;
     align-items: center;
     -moz-user-select: -moz-none;
@@ -37,11 +33,13 @@
     cursor: pointer;
 }
 
+.dateMode-endDate,
+.dateMode-recurrencePicker,
 .CreateTask-dateMode-container,
 .CreateTask-status-container {
     display: flex;
     align-items: center;
-    justify-content: left;
+    justify-content: space-between;
     margin: 10px 0px;
 }
 
@@ -52,7 +50,7 @@
 .dateMode-toggle,
 .status-toggle {
     display: flex;
-    gap: 1rem;
+    gap: .5rem;
 }
 
 .dateMode-toggle label,
@@ -65,4 +63,83 @@
 .dateMode-toggle input,
 .status-toggle input {
     margin-right: 0.5rem;
+}
+
+input.addSteps-input {
+    font-size: 0.875rem;
+    border: none;
+    background-color: transparent;
+    width: calc(100% - 30px);
+    padding: 0;
+}
+
+input.addSteps-input:active,
+input.addSteps-input:focus,
+input.addSteps-input:focus-visible {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+fieldset.addSteps-fieldset {
+    padding: 16.5px;
+    padding-top: 2px;
+    margin: 8px 0px;
+    border: 1px solid #bdbdbd;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+button.addSteps-button {
+    padding: 0 !important;
+    background-color: transparent;
+    margin: 0 !important;
+    height: max-content;
+    line-height: 12px;
+    border: none !important;
+}
+
+.addSteps-button-wrapper {
+    height: max-content;
+    width: max-content;
+    position: absolute;
+    left: calc(100% - 5px);
+    bottom: 18px;
+}
+
+.createTask-steps-container {
+    margin-top: -20px;
+}
+
+.dti-container.dm-end fieldset {
+    padding: 4px !important;
+}
+
+select.ct-cat-select {
+    padding: 16.5px;
+    width: calc(100% - 1px);
+    margin: 8px 0px;
+    background-color: #363636;
+    border: 1px solid #bdbdbd;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+button.ct-add {
+    padding: 0 !important;
+    background-color: transparent;
+    margin: 0 !important;
+    height: max-content;
+    line-height: 12px;
+    border: none !important;
+}
+
+.ct-cat-select-wrapper {
+    height: max-content;
+    width: max-content;
+    position: absolute;
+    left: calc(100% - 5px);
+    bottom: 14px;
 }

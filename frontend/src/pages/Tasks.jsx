@@ -4,7 +4,6 @@ import EisenhowerGraph from './views/EisenhowerGraph';
 
 // Experimentel
 import SimpleToggle from '../components/SimpleToggle';
-import MuiDateTimePicker from '../components/DateTimePicker';
 
 import { todosAPI, categoriesAPI } from '../api';
 import useIsMobile from '../hooks/useIsMobile';
@@ -31,8 +30,9 @@ const Tasks = () => {
                 todosAPI.getAll(),
                 categoriesAPI.getAll(),
             ]);
-
+            //console.log(todosData);
             setTodos(todosData);
+
             const allCategoryIds = new Set();
             const collectCategoryIds = (categories) => {
                 categories.forEach((cat) => {
@@ -105,6 +105,12 @@ const Tasks = () => {
     const toggleCreatTask = () => {
         setIsCreateTask(!isCreateTask);
         setModalOpen(!modalOpen);
+    }
+
+    const handleSubmitTask = (res) => {
+        console.log('Task erfolgreich erstellt hihi:', res);
+        setIsCreateTask(false);
+        setModalOpen(false);
     }
 
     const handleCategoryChange = (categoryId, isChecked) => {
@@ -184,7 +190,7 @@ const Tasks = () => {
 
     return (
         <>
-            <div className={modalOpen? 'modal-background' : ''}>
+            <div className={modalOpen ? 'modal-background' : ''}>
                 <h1>Tasks</h1>
                 <div
                     className='CreateTask-button'
@@ -238,17 +244,21 @@ const Tasks = () => {
                     </div>
                 ))}
 
-                <EisenhowerMatrix tasks={filteredTodos} />
+
+                {/*<EisenhowerMatrix tasks={filteredTodos} />
                 {!isMobile && (
                     <EisenhowerGraph tasks={filteredTodos} />
                 )}
                 <div>
                     <h1>TaskDetails-Test (id={testId}):</h1>
                     <TaskDetails id={testId} view={view} />
-                </div>
+                </div>*/}
             </div>
             {isCreateTask && (
-                <CreateTask toggle={toggleCreatTask} />
+                <CreateTask
+                    toggle={toggleCreatTask}
+                    handleSubmit={(e) => handleSubmitTask(e)}
+                />
             )}
         </>
     );

@@ -2,7 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import DateTimeInput from '../components/DateTimeInput';
 import Popup from '../components/Popup/Popup';
-import '../styles/components/NotificationModal.css';
+
+import '../styles/components/TaskCard.css';
+
+import { todosAPI, categoriesAPI } from '../api';
+import useIsMobile from '../hooks/useIsMobile';
+
+
 
 import {
     CancleIcon,
@@ -22,119 +28,107 @@ function isValidDate(date) {
     }
 }
 
+function buildHierarchyAndFlatten(catArray) {
+    const map = {};
+    catArray.forEach(c => {
+        map[c.id] = { ...c, children: [] };
+    });
+
+    const rootNodes = [];
+    catArray.forEach(c => {
+        if (!c.parent_id) {
+            rootNodes.push(map[c.id]);
+        } else if (map[c.parent_id]) {
+            map[c.parent_id].children.push(map[c.id]);
+        }
+    });
+
+    function sortChildren(node) {
+        node.children.sort((a, b) => a.title.localeCompare(b.title));
+        node.children.forEach(sortChildren);
+    }
+
+    rootNodes.sort((a, b) => a.title.localeCompare(b.title));
+    rootNodes.forEach(sortChildren);
+
+    const result = [];
+    function traverse(node, prefix) {
+        const path = prefix ? prefix + '/' + node.title : node.title;
+        result.push({ id: node.id, slashPath: path, title: node.title, color: node.color, description: node.description });
+        node.children.forEach(child => traverse(child, path));
+    }
+    rootNodes.forEach(r => traverse(r, ''));
+
+    return result;
+}
+
 function Test() {
 
-    const [showNotificationModal, setShowNotificationModal] = useState(false);
-    const [currentNotificationDatetime, setCurrentNotificationDatetime] = useState('');
-    const [recurrence, setRecurrence] = useState('none');
-    const [endDate, setEndDate] = useState('');
-    const [notificationList, setCurrentNotificationList] = useState([]);
+    const isMobile = useIsMobile();
 
-    //
+    const cardWidth = isMobile ? '50%' : '448px';
 
-    const [modalOpen, setModalOpen] = useState(false);
-    const [isCreateTask, setIsCreateTask] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [rawCategories, setRawCategories] = useState([]);
+    const [todos, setTodos] = useState([]);
 
-    const toggleCreatTask = () => {
-        setIsCreateTask(!isCreateTask);
-        setModalOpen(!modalOpen);
+    useEffect(() => {
+
+        const fetchData = async () => {
+            const [todosData, categoriesData] = await Promise.all([
+                todosAPI.getAll(),
+                categoriesAPI.getRawCategories(),
+            ]);
+            setTodos(todosData);
+            setRawCategories(categoriesData);
+            const flatCategories = buildHierarchyAndFlatten(categoriesData);
+            setCategories(flatCategories);
+            console.log(flatCategories)
+        };
+
+        fetchData();
+    }, []);
+
+    const handleCheckbox = (id) => {
+        console.log(`Aufgabe ${id} abgehakt!`);
     }
 
-    //
-
-    const handleCancleNotification = (e) => {
-        e.preventDefault(e);
-        setShowNotificationModal(false);
-        setCurrentNotificationDatetime('');
+    const renderTask = (todo) => {
+        const taskId = todo.id;
+        return (
+            <div className='task-wrapper' id={taskId}>
+                <div
+                    className='task-container'
+                    style={{ width: cardWidth }}
+                >
+                    <div className='task-header' id={`task-header-${taskId}`}>
+                        <input
+                            defaultValue={taskId}
+                            name='task'
+                            type='checkbox'
+                            id={`task-${taskId}`}
+                            onChange={() => {
+                                handleCheckbox(taskId);
+                            }}
+                        />
+                        <label htmlFor={`task-${taskId}`}>{todo.title}</label>
+                    </div>
+                </div>
+            </div>
+        )
     }
-
-    const handleChangeRecurrence = (e) => {
-        e.preventDefault
-        const mode = e.target.value;
-        setRecurrence(mode);
-    }
-
-    const handleAddNotification = (e) => {
-        e.preventDefault();
-        if (!isValidDate(currentNotificationDatetime)) {
-            console.log('Datum ist nicht valide (angeblich)');
-            return;
-        }
-        console.log('Datum ist gültig!');
-    }
-
-
 
     return (
         <>
             <div
-                className='CreateTask-button'
-                onClick={toggleCreatTask}
+                style={{ width: '500px' }}
+                id='test'
             >
-                Benachrichtigung hinzufügen
+
+                {!!todos[0] && (
+                    renderTask(todos[0])
+                )}
             </div>
-            {isCreateTask && (
-                <Popup
-                    toggle={toggleCreatTask}
-                    mode='display'
-                    title='Benachrichtigung'
-                    width='300px'
-                    zIndex={900}
-                    content={
-                        <>
-                            <div>
-                                <DateTimeInput
-                                    enablePast={false}
-                                    width='calc(100% - 35px)'
-                                    onChange={(d) => setCurrentNotificationDatetime(d)}
-                                />
-                            </div>
-                            <div className='ct-notif-rec'>
-                                <strong>Recurrence</strong>&nbsp;&nbsp;
-                                <select
-                                    value={recurrence}
-                                    onChange={(e) => handleChangeRecurrence(e)}
-                                >
-                                    <option value='none'>Einmalig</option>
-                                    <option value='daily'>Täglich</option>
-                                    <option value='weekly'>Wöchentlich</option>
-                                    <option value='monthly'>Monatlich</option>
-                                </select>
-                            </div>
-                            {recurrence !== 'none' && (
-                                <div className='ct-notif-enddate'>
-                                    <strong>Enddatum</strong>&nbsp;&nbsp;
-                                    <DateTimeInput
-                                        enablePast={false}
-                                        timeInput={false}
-                                        width='fit-content'
-                                        customClass='notificationModal rec'
-                                        onChange={(e) => setEndDate(e)}
-                                    />
-                                </div>
-                            )}
-                            <div className='ct-notif-buttons'>
-                                <button
-                                    id='ct-add-notification'
-                                    className='addNotification-button'
-                                    type='button'
-                                    onClick={(e) => handleCancleNotification(e)}
-                                >
-                                    Abbrechen
-                                </button>
-                                <button
-                                    id='ct-cancle-notification'
-                                    className='cancleNotification-button'
-                                    type='button'
-                                    onClick={(e) => handleAddNotification(e)}
-                                >
-                                    Fertig
-                                </button>
-                            </div>
-                        </>
-                    }
-                />
-            )}
         </>
     );
 };

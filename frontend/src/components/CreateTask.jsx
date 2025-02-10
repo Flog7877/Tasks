@@ -5,11 +5,8 @@ import useIsMobile from '../hooks/useIsMobile';
 import Popup from './Popup/Popup';
 import PopupInputfield from './Popup/PopupInputfield';
 
-import SimpleToggle from './SimpleToggle';
-import MuiDateTimePicker from './DateTimePicker';
 import PopupTextArea from './Popup/PopupTextArea';
 import PopupNumberInput from './Popup/PopupNumberInput';
-import PopupDelField from './Popup/PopupDelField';
 import NotificationModal from './NotificationModal';
 
 import DateTimeInput from './DateTimeInput';
@@ -46,14 +43,17 @@ function getContrastingColor(hexColor) {
     return luminance > 0.5 ? '#000000' : '#FFFFFF';
 }
 
-const CreateTask = ({ toggle }) => {
+/**
+ * 
+ * @param {Object} CreateTask 
+ * @param {function} CreateTask.toggle - Funktion, die das Toggle-Verhalten bestimmt 
+ * @param {function} CreateTask.handleSubmit - Funktion, die bestimmt, was bei 'Hinzufügen' passiert. Nimmt Backend-Response entgegen. 
+ */
+const CreateTask = ({ toggle, handleSubmit }) => {
 
     const isMobile = useIsMobile();
 
     const PopupWidth = isMobile ? '90%' : '448px';
-
-    const [hasDeadline, setHasDeadline] = useState(false);
-    const [hasNotification, setHasNotification] = useState(false);
 
     const [dateMode, setDateMode] = useState('none');
     const [selectedDateTime, setSelectedDateTime] = useState(null);
@@ -72,6 +72,13 @@ const CreateTask = ({ toggle }) => {
 
     const [categories, setCategories] = useState([]);
     const [rawCategories, setRawCategories] = useState([]);
+
+    const [currentStepText, setCurrentStepText] = useState('');
+    const [stepsList, setStepsList] = useState([]);
+
+    const [showNotificationModal, setShowNotificationModal] = useState(false);
+    const [notificationList, setNotificationList] = useState([]);
+    const [todoEndDate, setTodoEndDate] = useState(null);
 
     function buildHierarchyAndFlatten(catArray) {
         const map = {};
@@ -130,9 +137,33 @@ const CreateTask = ({ toggle }) => {
         else setUrgencyScore(e);
     }
 
-    const handleCreateTask = (e) => {
+    const handleCreateTask = async (e) => {
         e.preventDefault();
-        console.log('Hinzufügen gedrückt')
+
+        const todoDate = !isValidDate(selectedDateTime) || dateMode === 'none' ? null : selectedDateTime.toISOString();
+        const end_date = !isValidDate(todoEndDate) || todoRecurrence === 'none' ? null : todoEndDate.toISOString();
+
+        const payload = {
+            title: taskTitle,
+            details: taskDetails,
+            steps: stepsList,
+            importanceScore: parseInt(importanceScore),
+            urgencyScore: parseInt(urgencyScore),
+            categories: selectedCategoryArray,
+            status: todoStatus,
+            dateMode: dateMode,
+            todoDate: todoDate,
+            recurrence: todoRecurrence,
+            endDate: end_date,
+            notifications: notificationList
+        }
+
+        try {
+            const response = await todosAPI.create(payload);
+            if (typeof handleSubmit === 'function') handleSubmit(response)
+        } catch (err) {
+            console.error('Fehler beim erstellen des Tasks:', err);
+        }
     }
 
     const handleSelectCategory = (catID) => {
@@ -144,9 +175,6 @@ const CreateTask = ({ toggle }) => {
         const newArray = selectedCategoryArray.filter(item => item !== catObj)
         setSelectedCategoryArray(newArray);
     }
-
-    const [currentStepText, setCurrentStepText] = useState('');
-    const [stepsList, setStepsList] = useState([]);
 
     const handleAddStep = (e) => {
         e.preventDefault();
@@ -212,13 +240,8 @@ const CreateTask = ({ toggle }) => {
     }
 
     const handleDateTimeInput = (passedDate) => {
-        console.log('Eingegebenes Datum: ', passedDate);
+        if (isValidDate(passedDate)) setSelectedDateTime(passedDate);
     }
-
-    // Notifications 
-
-    const [showNotificationModal, setShowNotificationModal] = useState(false);
-    const [notificationList, setNotificationList] = useState([]);
 
     const toggleShowNotificationModal = () => {
         setShowNotificationModal(!showNotificationModal);
@@ -323,20 +346,24 @@ const CreateTask = ({ toggle }) => {
                                     <input
                                         className='addSteps-input'
                                         type='text'
-                                        placeholder='...'
+                                        placeholder='Neuer Schritt...'
                                         value={currentStepText}
                                         onChange={(e) => setCurrentStepText(e.target.value)}
                                     />
-                                    {currentStepText !== '' && (
-                                        <button
-                                            className='addSteps-button'
-                                            type='button'
-                                            onClick={(e) => handleAddStep(e)}
-                                        >
-                                            <PlusIcon width="20px" />
-                                        </button>
-                                    )}
                                 </fieldset>
+                                <div style={{ position: 'relative', width: 'calc(100% - 35px)', height: '0' }}>
+                                    <div className='addSteps-button-wrapper'>
+                                        {currentStepText !== '' && (
+                                            <button
+                                                className='addSteps-button'
+                                                type='button'
+                                                onClick={(e) => handleAddStep(e)}
+                                            >
+                                                <PlusIcon width="26px" />
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <PopupNumberInput
@@ -353,9 +380,10 @@ const CreateTask = ({ toggle }) => {
                             onChange={(e) => handleChangeUrgencyScore(e.target.value)}
 
                         />
-                        <div>
+                        <div className='ct-cat'>
                             <label>
                                 <select
+                                    className='ct-cat-select'
                                     value={'Kategorie...'}
                                     onChange={(e) => handleSelectCategory(e.target.value)}
                                 >
@@ -367,6 +395,18 @@ const CreateTask = ({ toggle }) => {
                                     ))}
                                 </select>
                             </label>
+                            <div style={{ position: 'relative', width: 'calc(100% - 35px)', height: '0' }}>
+                                <div className='ct-cat-select-wrapper'>
+                                        <button
+                                            className='ct-add'
+                                            type='button'
+                                            onClick={(e) => e.preventDefault()}
+                                            disabled={true}
+                                        >
+                                            <PlusIcon width="26px" />
+                                        </button>
+                                </div>
+                            </div>
                             <ul className='CreateTask-category-list'>
                                 {selectedCategoryArray.length > 0 ? (
                                     selectedCategoryArray.map(cat => (
@@ -394,7 +434,7 @@ const CreateTask = ({ toggle }) => {
                             </ul>
                         </div>
                         <div className='CreateTask-status-container'>
-                            <strong>Status:</strong>&nbsp;
+                            <strong>Status</strong>&nbsp;
                             <div className='status-toggle'>
                                 <label>
                                     <input
@@ -412,7 +452,7 @@ const CreateTask = ({ toggle }) => {
                                         checked={todoStatus === 'inProgress'}
                                         onChange={(e) => setTodoStatus(e.target.value)}
                                     />
-                                    In Bearbeitung
+                                    In Progress
                                 </label>
                                 <label>
                                     <input
@@ -421,13 +461,13 @@ const CreateTask = ({ toggle }) => {
                                         checked={todoStatus === 'putOff'}
                                         onChange={(e) => setTodoStatus(e.target.value)}
                                     />
-                                    Aufgeschoben
+                                    Put off
                                 </label>
                             </div>
                         </div>
                         <div className='CreateTask-dateMode-wrapper'>
                             <div className='CreateTask-dateMode-container'>
-                                <strong>Datemode:</strong>&nbsp;
+                                <strong>Datemode</strong>&nbsp;
                                 <div className='dateMode-toggle'>
                                     <label>
                                         <input
@@ -436,7 +476,6 @@ const CreateTask = ({ toggle }) => {
                                             checked={dateMode === 'none'}
                                             onChange={(e) => {
                                                 setDateMode(e.target.value);
-                                                setSelectedDateTime(null)
                                             }}
                                         />
                                         Aus
@@ -471,7 +510,7 @@ const CreateTask = ({ toggle }) => {
                                     />
                                     {dateMode === 'onDateTime' && (
                                         <div className='dateMode-recurrencePicker'>
-                                            <strong>Recurrence?</strong>&nbsp;&nbsp;
+                                            <strong>Recurrence</strong>
                                             <select
                                                 value={todoRecurrence}
                                                 onChange={(e) => handleChangeRecurrence(e)}
@@ -481,6 +520,20 @@ const CreateTask = ({ toggle }) => {
                                                 <option value='weekly'>Wöchentlich</option>
                                                 <option value='monthly'>Monatlich</option>
                                             </select>
+                                        </div>
+                                    )}
+                                    {todoRecurrence !== 'none' && dateMode === 'onDateTime' && (
+                                        <div className='dateMode-endDate'>
+                                            <strong>Enddatum</strong>&nbsp;&nbsp;
+                                            <DateTimeInput
+                                                enablePast={false}
+                                                timeInput={false}
+                                                width='fit-content'
+                                                customClass='dm-end'
+                                                onChange={(e) => {
+                                                    setTodoEndDate(e)
+                                                }}
+                                            />
                                         </div>
                                     )}
                                 </div>
